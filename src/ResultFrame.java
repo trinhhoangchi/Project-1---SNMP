@@ -17,7 +17,8 @@ public class ResultFrame extends JFrame {
     }
 
     public void showResult(Map<String, String> result) {
-        resultArea.setText("");
+        resultArea.setText(""); // Xóa nội dung cũ
+    
         if (result.isEmpty()) {
             resultArea.append("No data found.\n");
         } else {
@@ -25,6 +26,7 @@ public class ResultFrame extends JFrame {
                 resultArea.append(entry.getKey() + " : " + entry.getValue() + "\n");
             }
         }
-        setVisible(true);
+        setVisible(true); // Hiển thị cửa sổ
     }
+    
 }
