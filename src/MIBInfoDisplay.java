@@ -1,11 +1,12 @@
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
 public class MIBInfoDisplay {
     // Phương thức hiển thị thông tin của một node MIB lên bảng JTable
-    public static void displayNodeInfo(TreePath path, JTable infoTable) {
+    public static void displayNodeInfo(TreePath path, JTable infoTable, JTextField oidField) {
        
         // Lấy node được chọn từ cây
         DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) path.getLastPathComponent();
@@ -50,7 +51,7 @@ public class MIBInfoDisplay {
             {"ifOutQLen", "1.3.6.1.2.1.2.2.1.21", "Gauge32", "Độ dài hàng đợi đầu ra của interfaces (số lượng gói tin đang chờ được gửi)"},
             {"ifSpecific", "1.3.6.1.2.1.2.2.1.22", "Object Identifier", "Xác định giao diện cụ thể"}             
         };
-
+        
         // Lấy DefaultTableModel từ JTable
         DefaultTableModel tableModel = (DefaultTableModel) infoTable.getModel();
         tableModel.setRowCount(0);// Xóa hết dữ liệu cũ
@@ -62,6 +63,7 @@ public class MIBInfoDisplay {
                 tableModel.addRow(new Object[]{"OID", info[1]});
                 tableModel.addRow(new Object[]{"Syntax", info[2]});
                 tableModel.addRow(new Object[]{"Description", info[3]});
+                oidField.setText(info[1]); // Gán giá trị OID vào trường nhập liệu
                 break;
             }
         }
