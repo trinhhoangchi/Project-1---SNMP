@@ -11,72 +11,98 @@ import org.snmp4j.transport.DefaultUdpTransportMapping;
 import org.snmp4j.util.DefaultPDUFactory;
 import org.snmp4j.util.TreeEvent;
 import org.snmp4j.util.TreeUtils;
- 
+
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.Scanner;
- 
+
 public class Walk {
-    public static Map<String, String> doWalk(String tableOid, String ip) throws IOException {
- 
+
+    public static class SnmpResult {
+        private final String oid;
+        private final String name;
+        private final String type;
+        private final String value;
+
+        public SnmpResult(String oid, String name, String type, String value) {
+            this.oid = oid;
+            this.name = name;
+            this.type = type;
+            this.value = value;
+        }
+
+        public String getOid() {
+            return oid;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        @Override
+        public String toString() {
+            return String.format("OID: %s, Name: %s, Type: %s, Value: %s", oid, name, type, value);
+        }
+    }
+
+    public static List<SnmpResult> doWalk(String tableOid, String ip) throws IOException {
         String address = "udp:" + ip + "/161";
         String community = "public";
- 
+
         CommunityTarget target = new CommunityTarget();
         target.setAddress(GenericAddress.parse(address));
         target.setCommunity(new OctetString(community));
         target.setTimeout(1000);
         target.setVersion(SnmpConstants.version2c);
- 
-        Map<String, String> result = new TreeMap<>();
+
+        List<SnmpResult> result = new ArrayList<>();
         TransportMapping<UdpAddress> transport = new DefaultUdpTransportMapping();
         Snmp snmp = new Snmp(transport);
         transport.listen();
- 
+
         TreeUtils treeUtils = new TreeUtils(snmp, new DefaultPDUFactory());
         List<TreeEvent> events = treeUtils.getSubtree(target, new OID(tableOid));
-        if (events == null || events.size() == 0) {
+
+        if (events == null || events.isEmpty()) {
             System.out.println("Error: Unable to read table...");
             return result;
         }
- 
+
         for (TreeEvent event : events) {
-            if (event == null) {
+            if (event == null || event.isError()) {
+                System.out.println("Error: table OID [" + tableOid + "] " + (event != null ? event.getErrorMessage() : "Unknown error"));
                 continue;
             }
-            if (event.isError()) {
-                System.out.println("Error: table OID [" + tableOid + "] " + event.getErrorMessage());
-                continue;
-            }
- 
+
             VariableBinding[] varBindings = event.getVariableBindings();
             if (varBindings == null || varBindings.length == 0) {
                 continue;
             }
+
             for (VariableBinding varBinding : varBindings) {
                 if (varBinding == null) {
                     continue;
                 }
- 
-                result.put("." + varBinding.getOid().toString(), varBinding.getVariable().toString());
+                String oid = "." + varBinding.getOid().toString();
+                String name = varBinding.getOid().toString(); // Placeholder for actual name lookup
+                String type = varBinding.getVariable().getSyntaxString();
+                String value = varBinding.getVariable().toString();
+
+                result.add(new SnmpResult(oid, name, type, value));
             }
         }
         snmp.close();
- 
         return result;
     }
- 
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        String input = scanner.nextLine();
-        scanner.close();
-        try {
-            Map<String, String> result = doWalk(input, "localhost");
-            result.forEach((oid, value) -> System.out.println(oid + " : " + value));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }
+ 
