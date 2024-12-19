@@ -1,7 +1,7 @@
 import java.awt.*;
+import java.util.Map;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
 import javax.swing.tree.*;
 
 public class MIBBrowser extends JFrame {
@@ -37,7 +37,7 @@ public class MIBBrowser extends JFrame {
         // Tạo cây MIB và lắng nghe sự kiện chọn nút trong cây
         DefaultMutableTreeNode root = MIBTree.createMIBTree();
         mibTree = new JTree(root);
-        mibTree.addTreeSelectionListener(e -> MIBInfoDisplay.displayNodeInfo(e.getPath(), infoTable));
+        mibTree.addTreeSelectionListener(e -> MIBInfoDisplay.displayNodeInfo(e.getPath(), infoTable, oidField));
 
         // Tạo thanh cuộn cho cây MIB
         JScrollPane treeScrollPane = new JScrollPane(mibTree);
@@ -53,21 +53,9 @@ public class MIBBrowser extends JFrame {
         leftSplit.setDividerLocation(300);
 
         // Tạo bảng kết quả từ SNMP
-        String[] resultColumns = {"OID", "Value", "Type", "Name", "IP:Port"};
+        String[] resultColumns = {"OID", "Value", "Type", "Name"};
         resultTable = new JTable(new DefaultTableModel(resultColumns, 0));
         JScrollPane resultScroll = new JScrollPane(resultTable);
-
-        // Thay đổi tỉ lệ giữa các cột
-        TableColumn OID = resultTable.getColumnModel().getColumn(0); // Cột "OID"
-        TableColumn Value = resultTable.getColumnModel().getColumn(1); // Cột "Value"
-        TableColumn Type = resultTable.getColumnModel().getColumn(2); // Cột "Type"
-        TableColumn Name = resultTable.getColumnModel().getColumn(3); // Cột "Name"
-        TableColumn IPPort = resultTable.getColumnModel().getColumn(4); // Cột "IPPort"
-        OID.setPreferredWidth(300);  // Chiều rộng cột "OID"
-        Value.setPreferredWidth(100);  // Chiều rộng cột "Value"
-        Type.setPreferredWidth(200);  // Chiều rộng cột "Type"
-        Name.setPreferredWidth(150);  // Chiều rộng cột "Name"
-        IPPort.setPreferredWidth(300);  // Chiều rộng cột "IPPort"
 
         // Tạo split pane cho toàn bộ cửa sổ
         JSplitPane mainSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftSplit, resultScroll);
@@ -76,6 +64,9 @@ public class MIBBrowser extends JFrame {
         // Thêm panel và split pane vào cửa sổ chính
         add(oidPanel, BorderLayout.NORTH);
         add(mainSplit, BorderLayout.CENTER);
+
+        // Khởi tạo ResultFrame
+        resultFrame = new ResultFrame();
 
         setVisible(true); // Hiển thị cửa sổ
 
@@ -93,15 +84,24 @@ public class MIBBrowser extends JFrame {
         } else {
             oidDisplayLabel.setText("Root OID: " + rootOid); // Hiển thị OID đã nhập
         }
-
+    
         try {
-            resultFrame = new ResultFrame(); // Tạo cửa sổ kết quả
-            resultFrame.showResult(SNMPWalk.walk(rootOid)); // Thực hiện SNMP Walk và hiển thị kết quả
+            // Thực hiện SNMP Walk và lấy kết quả
+            Map<String, String> result = SNMPWalk.walk(rootOid);
+    
+            // Hiển thị kết quả trên bảng resultTable
+            DefaultTableModel tableModel = (DefaultTableModel) resultTable.getModel();
+            tableModel.setRowCount(0); // Xóa dữ liệu cũ trong bảng
+    
+            for (Map.Entry<String, String> entry : result.entrySet()) {
+                tableModel.addRow(new Object[]{entry.getKey(), entry.getValue(), "Type Placeholder", "Name Placeholder"});
+            }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error performing SNMP walk: " + e.getMessage(), 
-                "Error", JOptionPane.ERROR_MESSAGE); // Hiển thị thông báo lỗi nếu có
+            JOptionPane.showMessageDialog(this, "Error performing SNMP walk: " + e.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE); // Hiển thị thông báo lỗi nếu có
         }
     }
+    
 
     // Xử lý sự kiện khi nhấn nút Get
     private void onGetButtonPressed() {
@@ -112,15 +112,24 @@ public class MIBBrowser extends JFrame {
         } else {
             oidDisplayLabel.setText("OID: " + oid); // Hiển thị OID đã nhập
         }
-
+    
         try {
-            resultFrame = new ResultFrame(); // Tạo cửa sổ kết quả
-            resultFrame.showResult(SNMPGet.get(oid)); // Thực hiện SNMP Get và hiển thị kết quả
+            // Thực hiện SNMP Get và lấy kết quả
+            Map<String, String> result = SNMPGet.get(oid);
+    
+            // Hiển thị kết quả trên bảng resultTable
+            DefaultTableModel tableModel = (DefaultTableModel) resultTable.getModel();
+            tableModel.setRowCount(0); // Xóa dữ liệu cũ trong bảng
+    
+            for (Map.Entry<String, String> entry : result.entrySet()) {
+                tableModel.addRow(new Object[]{entry.getKey(), entry.getValue(), "Type Placeholder", "Name Placeholder"});
+            }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error performing SNMP get: " + e.getMessage(), 
-                "Error", JOptionPane.ERROR_MESSAGE); // Hiển thị thông báo lỗi nếu có
+            JOptionPane.showMessageDialog(this, "Error performing SNMP get: " + e.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE); // Hiển thị thông báo lỗi nếu có
         }
     }
+    
 
     // Phương thức main để chạy ứng dụng
     public static void main(String[] args) {
