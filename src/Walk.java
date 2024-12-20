@@ -12,11 +12,10 @@ import org.snmp4j.util.DefaultPDUFactory;
 import org.snmp4j.util.TreeEvent;
 import org.snmp4j.util.TreeUtils;
 
+import javax.swing.tree.DefaultMutableTreeNode;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 public class Walk {
 
@@ -78,6 +77,9 @@ public class Walk {
             return result;
         }
 
+        // Tạo cây MIB để tra cứu tên
+        DefaultMutableTreeNode mibTree = MIBTree.createMIBTree();
+
         for (TreeEvent event : events) {
             if (event == null || event.isError()) {
                 System.out.println("Error: table OID [" + tableOid + "] " + (event != null ? event.getErrorMessage() : "Unknown error"));
@@ -94,7 +96,8 @@ public class Walk {
                     continue;
                 }
                 String oid = "." + varBinding.getOid().toString();
-                String name = varBinding.getOid().toString(); // Placeholder for actual name lookup
+                // Tra cứu tên MIB từ cây
+                String name = MIBTree.lookupName(mibTree, oid);
                 String type = varBinding.getVariable().getSyntaxString();
                 String value = varBinding.getVariable().toString();
 
@@ -105,4 +108,3 @@ public class Walk {
         return result;
     }
 }
- 
