@@ -6,15 +6,15 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.*;
 
 public class MIBBrowser extends JFrame {
-    private JTree mibTree;
-    private JTable infoTable, resultTable;
-    private JTextField oidField;
-    private JLabel oidDisplayLabel;
-    private ResultFrame resultFrame;
+    private JTree mibTree;          // Cây MIB hiển thị thông tin cấu trúc MIB
+    private JTable infoTable, resultTable;  // Bảng thông tin MIB và bảng kết quả từ SNMP
+    private JTextField oidField;    // Trường văn bản để nhập OID
+    private JLabel oidDisplayLabel; // Nhãn hiển thị OID hiện tại
+    private ResultFrame resultFrame; // Cửa sổ kết quả SNMP
 
     public MIBBrowser() {
         setTitle("MIB-2 Browser");
-        setSize(1000, 600);
+        setSize(1000, 600);  // Kích thước cửa sổ
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
@@ -33,23 +33,30 @@ public class MIBBrowser extends JFrame {
         oidPanel.add(getButton);
         oidPanel.add(oidDisplayLabel);
 
+        // Tạo cây MIB và lắng nghe sự kiện chọn nút trong cây
         DefaultMutableTreeNode root = MIBTree.createMIBTree();
         mibTree = new JTree(root);
         mibTree.addTreeSelectionListener(e -> MIBInfoDisplay.displayNodeInfo(e.getPath(), infoTable, oidField));
         JScrollPane treeScrollPane = new JScrollPane(mibTree);
         treeScrollPane.setPreferredSize(new Dimension(250, 300));
 
+        
+        // Tạo bảng thông tin MIB
         String[] infoColumns = {"Attribute", "Value"};
         infoTable = new JTable(new DefaultTableModel(infoColumns, 0));
         JScrollPane infoScroll = new JScrollPane(infoTable);
 
+        
+        // Tạo split pane cho cây và bảng thông tin
         JSplitPane leftSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, treeScrollPane, infoScroll); 
         leftSplit.setDividerLocation(300);
 
+        // Tạo bảng kết quả từ SNMP
         String[] resultColumns = {"OID", "Value", "Type", "Name"};
         resultTable = new JTable(new DefaultTableModel(resultColumns, 0));
         JScrollPane resultScroll = new JScrollPane(resultTable);
 
+        // Tạo split pane cho toàn bộ cửa sổ
         JSplitPane mainSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftSplit, resultScroll);
         mainSplit.setDividerLocation(300);
 
@@ -59,6 +66,7 @@ public class MIBBrowser extends JFrame {
         resultFrame = new ResultFrame();
         setVisible(true);
 
+        // Gán sự kiện cho nút Walk và Get
         walkButton.addActionListener(e -> onWalkButtonPressed());
         getButton.addActionListener(e -> onGetButtonPressed());
     }
@@ -72,10 +80,12 @@ public class MIBBrowser extends JFrame {
         oidDisplayLabel.setText("Root OID: " + rootOid);
 
         try {
+            // Thực hiện SNMP Walk và lấy kết quả
             List<Walk.SnmpResult> result = Walk.doWalk(rootOid, "localhost");
             DefaultTableModel tableModel = (DefaultTableModel) resultTable.getModel();
-            tableModel.setRowCount(0);
+            tableModel.setRowCount(0); // Xóa dữ liệu cũ trong bảng
 
+            // Hiển thị kết quả trên bảng resultTable
             for (Walk.SnmpResult entry : result) {
                 tableModel.addRow(new Object[]{entry.getOid(), entry.getValue(), entry.getType(), entry.getName()});
             }
@@ -86,7 +96,7 @@ public class MIBBrowser extends JFrame {
     }
 
     private void onGetButtonPressed() {
-        String oid = oidField.getText();
+        String oid = oidField.getText();// Lấy OID
         if (oid.isEmpty()) {
             oidDisplayLabel.setText("OID: Please enter a valid OID.");
             return;
