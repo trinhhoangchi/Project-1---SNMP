@@ -1,17 +1,13 @@
 import javax.swing.tree.DefaultMutableTreeNode;
 
 public class MIBTree {
-    
+
     // Tạo cây MIB
     public static DefaultMutableTreeNode createMIBTree() {
-        // Tạo node gốc
         DefaultMutableTreeNode root = new DefaultMutableTreeNode("mib");
 
-        // Tạo node con "system"
         DefaultMutableTreeNode system = new DefaultMutableTreeNode("system");
-        root.add(system); // Thêm node "system" vào node gốc
-        
-        // Thêm con của node "system"
+        root.add(system);
         system.add(new DefaultMutableTreeNode("sysDescr"));
         system.add(new DefaultMutableTreeNode("sysObjectID"));
         system.add(new DefaultMutableTreeNode("sysUpTime"));
@@ -22,16 +18,13 @@ public class MIBTree {
 
         DefaultMutableTreeNode interfaces = new DefaultMutableTreeNode("interfaces");
         root.add(interfaces);
-
         DefaultMutableTreeNode ifNumber = new DefaultMutableTreeNode("ifNumber");
         interfaces.add(ifNumber);
-
         DefaultMutableTreeNode ifTable = new DefaultMutableTreeNode("ifTable");
         interfaces.add(ifTable);
-
         DefaultMutableTreeNode ifEntry = new DefaultMutableTreeNode("ifEntry");
-
         ifTable.add(ifEntry);
+
         ifEntry.add(new DefaultMutableTreeNode("ifDescr"));
         ifEntry.add(new DefaultMutableTreeNode("ifType"));
         ifEntry.add(new DefaultMutableTreeNode("ifMtu"));
@@ -52,8 +45,30 @@ public class MIBTree {
         ifEntry.add(new DefaultMutableTreeNode("ifOutErrors"));
         ifEntry.add(new DefaultMutableTreeNode("ifOutQLen"));
         ifEntry.add(new DefaultMutableTreeNode("ifSpecific"));
-               
-        // Trả về cây MIB-2 đầy đủ đã được tạo
+
         return root;
+    }
+
+    // Tìm tên nút tương ứng với OID
+    public static String lookupName(DefaultMutableTreeNode node, String oid) {
+        if (node == null || oid == null) {
+            return "Unknown";
+        }
+
+        // Kiểm tra nếu OID khớp với tên của node (không chỉ so sánh tên, mà so sánh đúng với phần OID)
+        if (oid.contains(node.toString())) {
+            return node.toString();
+        }
+
+        // Kiểm tra các nút con
+        for (int i = 0; i < node.getChildCount(); i++) {
+            DefaultMutableTreeNode child = (DefaultMutableTreeNode) node.getChildAt(i);
+            String result = lookupName(child, oid);
+            if (!result.equals("Unknown")) {
+                return result;
+            }
+        }
+
+        return "Unknown";
     }
 }
