@@ -48,27 +48,4 @@ public class MIBTree {
 
         return root;
     }
-
-    // Tìm tên nút tương ứng với OID
-    public static String lookupName(DefaultMutableTreeNode node, String oid) {
-        if (node == null || oid == null) {
-            return "Unknown";
-        }
-
-        // Kiểm tra nếu OID khớp với tên của node (không chỉ so sánh tên, mà so sánh đúng với phần OID)
-        if (oid.contains(node.toString())) {
-            return node.toString();
-        }
-
-        // Kiểm tra các nút con
-        for (int i = 0; i < node.getChildCount(); i++) {
-            DefaultMutableTreeNode child = (DefaultMutableTreeNode) node.getChildAt(i);
-            String result = lookupName(child, oid);
-            if (!result.equals("Unknown")) {
-                return result;
-            }
-        }
-
-        return "Unknown";
-    }
 }
