@@ -15,7 +15,7 @@ public class MIBInfoDisplay {
         {"sysLocation", "1.3.6.1.2.1.1.6.0", "DisplayString", "Vị trí của hệ thống"},
         {"sysServices", "1.3.6.1.2.1.1.7.0", "Integer", "Các dịch vụ được cung cấp bởi hệ thống"},
         
-        {"interfaces", "1.3.6.1.2", "", ""},
+        {"interfaces", "1.3.6.1.2.1.2", "", ""},
         {"ifNumber", "1.3.6.1.2.1.2.1", "Integer", "Số lượng interfaces mạng trên thiết bị"},
         {"ifTable", "1.3.6.1.2.1.2.2", "Table", "List of interface entries"},
         {"ifEntry", "1.3.6.1.2.1.2.2.1", "", "An interface entry containing objects at the subnetwork layer and below for a particular interface."},
