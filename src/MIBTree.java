@@ -25,6 +25,7 @@ public class MIBTree {
         DefaultMutableTreeNode ifEntry = new DefaultMutableTreeNode("ifEntry");
         ifTable.add(ifEntry);
 
+        ifEntry.add(new DefaultMutableTreeNode("ifIndex"));
         ifEntry.add(new DefaultMutableTreeNode("ifDescr"));
         ifEntry.add(new DefaultMutableTreeNode("ifType"));
         ifEntry.add(new DefaultMutableTreeNode("ifMtu"));
