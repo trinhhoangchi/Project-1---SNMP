@@ -18,14 +18,14 @@ public class ResultFrame extends JFrame {
         add(scrollPane, BorderLayout.CENTER);
     }
 
-    public void showResult(List<Walk.SnmpResult> result) {
+    public void showResult(List<SnmpResult> result) {
         DefaultTableModel tableModel = (DefaultTableModel) resultTable.getModel();
         tableModel.setRowCount(0); // Clear previous results
 
         if (result.isEmpty()) {
             JOptionPane.showMessageDialog(this, "No data found.", "Information", JOptionPane.INFORMATION_MESSAGE);
         } else {
-            for (Walk.SnmpResult entry : result) {
+            for (SnmpResult entry : result) {
                 tableModel.addRow(new Object[]{entry.getOid(), entry.getValue(), entry.getType(), entry.getName()});
             }
         }
