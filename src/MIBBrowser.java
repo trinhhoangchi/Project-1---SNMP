@@ -4,8 +4,6 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 
-
-
 public class MIBBrowser extends JFrame {
     private JTree mibTree;
     private JTable infoTable, resultTable;
@@ -46,7 +44,7 @@ public class MIBBrowser extends JFrame {
         JSplitPane leftSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, treeScrollPane, infoScroll); 
         leftSplit.setDividerLocation(300);
 
-        String[] resultColumns = {"OID", "Value", "Name"};
+        String[] resultColumns = {"OID", "Name", "Value"};
         resultTable = new JTable(new DefaultTableModel(resultColumns, 0));
         JScrollPane resultScroll = new JScrollPane(resultTable);
 
@@ -72,12 +70,12 @@ public class MIBBrowser extends JFrame {
 
         try {
             Walk walk = new Walk();
-            List<SnmpResult> result = walk.doWalk(rootOid, "localhost"); // Use Walk's doWalk method
+            List<SnmpResult> result = walk.doWalk(rootOid, "localhost"); 
             DefaultTableModel tableModel = (DefaultTableModel) resultTable.getModel();
             tableModel.setRowCount(0);
 
             for (SnmpResult entry : result) {
-                tableModel.addRow(new Object[]{entry.getOid(), entry.getValue(), entry.getName()});
+                tableModel.addRow(new Object[]{entry.getOid(), entry.getName(), entry.getValue()});
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error performing SNMP walk: " + e.getMessage(),
@@ -95,12 +93,12 @@ public class MIBBrowser extends JFrame {
 
         try {
             Get get = new Get(); // Create an instance of Get
-            List<SnmpResult> result = get.doGet(List.of(oid), "localhost"); // Use Get's doGet method
+            List<SnmpResult> result = get.doGet(List.of(oid), "localhost");
             DefaultTableModel tableModel = (DefaultTableModel) resultTable.getModel();
             tableModel.setRowCount(0);
 
             for (SnmpResult entry : result) {
-                tableModel.addRow(new Object[]{entry.getOid(), entry.getValue(), entry.getName()});
+                tableModel.addRow(new Object[]{entry.getOid(), entry.getName(), entry.getValue()});
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error performing SNMP get: " + e.getMessage(),
