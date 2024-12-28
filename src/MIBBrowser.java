@@ -46,7 +46,7 @@ public class MIBBrowser extends JFrame {
         JSplitPane leftSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, treeScrollPane, infoScroll); 
         leftSplit.setDividerLocation(300);
 
-        String[] resultColumns = {"OID", "Value", "Type", "Name"};
+        String[] resultColumns = {"OID", "Value", "Name"};
         resultTable = new JTable(new DefaultTableModel(resultColumns, 0));
         JScrollPane resultScroll = new JScrollPane(resultTable);
 
@@ -77,7 +77,7 @@ public class MIBBrowser extends JFrame {
             tableModel.setRowCount(0);
 
             for (SnmpResult entry : result) {
-                tableModel.addRow(new Object[]{entry.getOid(), entry.getValue(), entry.getType(), entry.getName()});
+                tableModel.addRow(new Object[]{entry.getOid(), entry.getValue(), entry.getName()});
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error performing SNMP walk: " + e.getMessage(),
@@ -100,7 +100,7 @@ public class MIBBrowser extends JFrame {
             tableModel.setRowCount(0);
 
             for (SnmpResult entry : result) {
-                tableModel.addRow(new Object[]{entry.getOid(), entry.getValue(), entry.getType(), entry.getName()});
+                tableModel.addRow(new Object[]{entry.getOid(), entry.getValue(), entry.getName()});
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error performing SNMP get: " + e.getMessage(),
