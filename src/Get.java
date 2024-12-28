@@ -35,8 +35,7 @@ public class Get extends SNMPPrepare {
                 String oid = vb.getOid().toString();
                 String name = MIBInfoDisplay.lookupName(oid);
                 String value = vb.getVariable().toString();
-                String type = vb.getVariable().getSyntaxString();
-                results.add(new SnmpResult(oid, name, type, value));
+                results.add(new SnmpResult(oid, name, value));
             }
         } else {
             System.out.println("Error: No response from SNMP agent.");
