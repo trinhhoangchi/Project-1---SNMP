@@ -14,9 +14,9 @@ import java.util.List;
 
 public class Get extends SNMPPrepare {
 
-    public List<SnmpResult> doGet(List<String> oids, String ip) throws IOException {
+    public List<SnmpResult> doGet(List<String> oids, String ip, String community) throws IOException {
         List<SnmpResult> results = new ArrayList<>();
-        String community = "public";
+
 
         TransportMapping<UdpAddress> transport = new DefaultUdpTransportMapping();
         Snmp snmp = new Snmp(transport);
