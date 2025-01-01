@@ -17,7 +17,6 @@ public class MIBBrowser extends JFrame {
         setTitle("MIB-2 Browser");
         setSize(1000, 600);
         setLocation(140 ,40);
-     //   setLayout(new BorderLayout());
 //-----------------
         JPanel oidPanel = new JPanel(new FlowLayout(FlowLayout.LEFT)); 
         oidPanel.setPreferredSize(new Dimension(1000, 50));
@@ -33,7 +32,6 @@ public class MIBBrowser extends JFrame {
         JButton walkButton = new JButton("Walk");
         JButton getButton = new JButton("Get");
         oidDisplayLabel = new JLabel("OID: Not connected");
-
 
         oidPanel.add(oidLabel);
         oidPanel.add(oidField);
@@ -102,6 +100,12 @@ public class MIBBrowser extends JFrame {
         try {
             Walk walk = new Walk();
             List<SnmpResult> result = walk.doWalk(rootOid, ip, community); 
+            // hiển thị lỗi nếu kết quả trống
+            if (result.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "No data returned. Check your OID, IP and Community String.",
+                                              "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             DefaultTableModel tableModel = (DefaultTableModel) resultTable.getModel();
             tableModel.setRowCount(0);
 
@@ -110,7 +114,7 @@ public class MIBBrowser extends JFrame {
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error performing SNMP walk: " + e.getMessage(),
-                                            "Error", JOptionPane.ERROR_MESSAGE);
+                                          "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -138,6 +142,13 @@ public class MIBBrowser extends JFrame {
         try {
             Get get = new Get(); 
             List<SnmpResult> result = get.doGet(List.of(oid), ip,community);
+            // hiển thị lỗi nếu kết quả trống
+            if (result.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "No data returned. Check your OID,IP and Community String.",
+                                              "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }           
+
             DefaultTableModel tableModel = (DefaultTableModel) resultTable.getModel();
             tableModel.setRowCount(0);
 
