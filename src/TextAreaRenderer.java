@@ -16,7 +16,7 @@ public class TextAreaRenderer extends JTextArea implements TableCellRenderer {
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         setText(value == null ? "" : value.toString());
         int height = (int) getPreferredSize().getHeight();
-        table.setRowHeight(row, Math.max(height, 40)); // Đảm bảo chiều cao tối thiểu là 40
+        table.setRowHeight(row, Math.max(height, 50));
         return this;
     }
 }
