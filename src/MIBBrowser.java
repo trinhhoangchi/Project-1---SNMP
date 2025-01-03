@@ -59,6 +59,10 @@ public class MIBBrowser extends JFrame {
         JSplitPane leftSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, treeScrollPane, infoScroll); 
         leftSplit.setDividerLocation(300);
 
+        //tự động xuống dòng
+        infoTable.getColumnModel().getColumn(1).setCellRenderer(new TextAreaRenderer());
+        infoTable.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+
 //----------------- Tạo bảng hiển thị kết quả         
         String[] resultColumns = {"OID", "Name", "Value"};
         resultTable = new JTable(new DefaultTableModel(resultColumns, 0));
