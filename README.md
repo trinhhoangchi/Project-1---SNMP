@@ -60,6 +60,10 @@ Phần mềm được thiết kế để chạy trên **Visual Studio Code (VS C
 
 ```
 MIB-2-Browser/
+|--.vscode/
+|   |--settings.json
+|--lib
+|   |--mds-5.1.1.jar
 |-- src/
 |   |-- MIBBrowser.java         # Giao diện chính và logic ứng dụng
 |   |-- Main.java               # Điểm khởi đầu của ứng dụng
