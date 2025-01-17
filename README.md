@@ -11,7 +11,7 @@
 
 MIB-2 Browser là một ứng dụng đồ họa dựa trên Java, giúp người dùng khám phá và truy xuất thông tin từ các thiết bị hỗ trợ SNMP sử dụng MIB (Management Information Base). Giao diện được xây dựng bằng Java Swing, tập trung vào tính đơn giản và hiệu quả.
 
-Phần mềm được thiết kế để chạy trên **Visual Studio Code (VS Code)**.
+Phần mềm được thiết kế để chạy trên **Visual Studio Code (VS Code)** và hệ điều hành **Windows**.
 
 ---
 
@@ -83,26 +83,22 @@ MIB-2-Browser/
 
 ## Đóng góp
 
-Hoan nghênh đóng góp! Các bước thực hiện:
+Các bước thực hiện:
 
 1. Fork dự án.
 2. Tạo nhánh mới (`git checkout -b feature-name`).
 3. Commit thay đổi (`git commit -m 'Add some feature'`).
 4. Push nhánh (`git push origin feature-name`).
 5. Tạo pull request.
-
----
-
-## Giấy phép
-
-Dự án này được cấp phép theo MIT License. Xem tệp LICENSE để biết thêm chi tiết.
-
 ---
 
 ## Lời cảm ơn
 
-- Chân thành cảm ơn thầy **Nguyễn Quốc Khánh** đã hướng dẫn thực hiện dự án.
+- Nhóm em xin chân thành cảm ơn thầy **Nguyễn Quốc Khánh** đã hướng dẫn thực hiện dự án.
 - Tài liệu tham khảo:
   - [Java Swing Documentation](https://docs.oracle.com/javase/tutorial/uiswing/)
   - [SNMP Protocol Overview](https://en.wikipedia.org/wiki/Simple_Network_Management_Protocol)
+  - [SNMP Toàn tập - Diep Thanh Nguyen](https://sites.google.com/site/snmptoantap/)
+  - [Các tài liệu RFC](https://datatracker.ietf.org/)
+
 
