@@ -61,9 +61,9 @@ Phần mềm được thiết kế để chạy trên **Visual Studio Code (VS C
 ```
 MIB-2-Browser/
 |--.vscode/
-|   |--settings.json
+|   |--settings.json            # Thiết lập thư viện SNMP4J cho file
 |--lib
-|   |--mds-5.1.1.jar
+|   |--mds-5.1.1.jar            # Thư viện SNMP4J
 |-- src/
 |   |-- MIBBrowser.java         # Giao diện chính và logic ứng dụng
 |   |-- Main.java               # Điểm khởi đầu của ứng dụng
